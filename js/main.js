@@ -5,6 +5,10 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 const revealTargets = document.querySelectorAll('.section, .feature, .price-card, .card, .hero-copy, .hero-visual');
 revealTargets.forEach(el => el.classList.add('reveal'));
 
+// Ensure hero is visible immediately
+const heroImmediate = document.querySelectorAll('.hero-copy, .hero-visual');
+heroImmediate.forEach(el => el.classList.add('show'));
+
 if (!prefersReduced) {
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -53,35 +57,3 @@ if (cover && !prefersReduced) {
   float();
 }
 
-// Count-up stats
-const trustNumbers = document.querySelectorAll('.trust-item strong');
-if (!prefersReduced) {
-  const countUp = (el, target, suffix = '') => {
-    let start = 0;
-    const duration = 1000;
-    const startTime = performance.now();
-    const step = (now) => {
-      const p = Math.min((now - startTime) / duration, 1);
-      const value = Math.floor(start + (target - start) * p);
-      el.textContent = `${value}${suffix}`;
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
-
-  const statMap = [
-    { value: 200, suffix: '' },
-    { value: 2, suffix: '' },
-    { value: 0, suffix: '' }
-  ];
-
-  trustNumbers.forEach((el, idx) => {
-    const text = el.textContent.trim();
-    if (text.includes('FREESHIP')) return; // leave text as-is
-    const m = text.match(/\d+/);
-    if (m) {
-      const target = statMap[idx]?.value || parseInt(m[0], 10);
-      countUp(el, target);
-    }
-  });
-}
