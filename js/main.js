@@ -27,25 +27,22 @@ if (!prefersReduced) {
   });
 }
 
-// Parallax glow + tilt on hero
-const glow = document.querySelector('.glow');
+// Parallax + floating (desktop only)
 const hero = document.querySelector('.hero');
 const cover = document.querySelector('.cover');
-if (hero && !prefersReduced) {
+const isMobile = window.innerWidth < 900;
+
+if (hero && cover && !prefersReduced && !isMobile) {
   hero.addEventListener('mousemove', (e) => {
     const rect = hero.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
-    if (glow) glow.style.transform = `translate(${x}px, ${y}px)`;
-    if (cover) cover.style.transform = `rotate(${x / 4}deg) translateY(${y / 4}px)`;
+    cover.style.transform = `rotate(${x / 4}deg) translateY(${y / 4}px)`;
   });
   hero.addEventListener('mouseleave', () => {
-    if (cover) cover.style.transform = 'rotate(0deg) translateY(0)';
+    cover.style.transform = 'rotate(0deg) translateY(0)';
   });
-}
 
-// Floating cover for life-like motion
-if (cover && !prefersReduced) {
   let t = 0;
   const float = () => {
     t += 0.018;
